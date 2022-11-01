@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-11-01T14:07:48.807Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.52" etag="0moYh7F_IakYdr4Zaaye" version="20.5.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-11-01T15:04:29.718Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.52" etag="EZXrxxkJn6xDDl0hG4xv" version="20.5.1" type="github">
   <diagram id="xZX7jmNKyjKFwH5nU8af" name="페이지-1">
-    <mxGraphModel dx="461" dy="563" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1230" dy="571" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -27,7 +27,7 @@
             <mxPoint x="360" y="70" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-2" value="로그인 정보 확인" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-2" value="로그인 정보 확인 및 현재 사용자 위치의 좌표값&amp;nbsp;" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="360" y="270" as="sourcePoint" />
             <mxPoint x="430" y="340" as="targetPoint" />
@@ -36,7 +36,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-3" value="메인페이지" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-3" value="사용자 위치의 좌표값 확인" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="390" y="340" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="NMJ8LbmS8p8p3ymPlIrR-6" value="" style="curved=1;endArrow=classic;html=1;rounded=0;exitX=0.855;exitY=-0.06;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="L_YjkdRr3CHnfBcLAS7l-4">
@@ -46,6 +46,80 @@
             <Array as="points">
               <mxPoint x="410" y="140" />
               <mxPoint x="380" y="60" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-8" value="위치 확인된 사용자 좌표값" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="NMJ8LbmS8p8p3ymPlIrR-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="640" y="470" as="sourcePoint" />
+            <mxPoint x="550" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-9" value="사용자 좌표값 문서" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="500" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-10" value="현재 좌표에 해당하는 장소의 근방 낙서페이지 찾기" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="NMJ8LbmS8p8p3ymPlIrR-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="600" as="sourcePoint" />
+            <mxPoint x="480" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-11" value="낙서 페이지" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="414" y="590" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-12" value="현재 좌표에 해당하는 장소의 근방 채팅페이지 찾기" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.5448" y="16" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="520" as="sourcePoint" />
+            <mxPoint x="670" y="600" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-13" value="채팅 페이" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="600" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-14" value="로그인 정보 확인 및 마이페이지&amp;nbsp;" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="270" as="sourcePoint" />
+            <mxPoint x="240" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-23" value="사용자 정보 수정" style="curved=1;endArrow=classic;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="L_YjkdRr3CHnfBcLAS7l-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="370" as="sourcePoint" />
+            <mxPoint x="190" y="290" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="190" y="340" />
+              <mxPoint x="110" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-24" value="마이페이지" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="174" y="370" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-26" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.78;exitY=0.973;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.24;entryY=0.978;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="NMJ8LbmS8p8p3ymPlIrR-24" target="NMJ8LbmS8p8p3ymPlIrR-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="260" y="540" as="sourcePoint" />
+            <mxPoint x="410" y="420" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="370" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-27" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.717;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="NMJ8LbmS8p8p3ymPlIrR-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="570" as="sourcePoint" />
+            <mxPoint x="410" y="630" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="340" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NMJ8LbmS8p8p3ymPlIrR-28" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.587;entryY=1.023;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.04;exitY=0.748;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="NMJ8LbmS8p8p3ymPlIrR-13" target="NMJ8LbmS8p8p3ymPlIrR-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="640" as="sourcePoint" />
+            <mxPoint x="200" y="590" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="350" y="710" />
             </Array>
           </mxGeometry>
         </mxCell>
