@@ -1,0 +1,15 @@
+version: '3'
+services:
+  DB:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - 5433:5432
+    volumes:
+      - tripdoodle:/var/lib/postgresql/data
+
+volumes:
+  tripdoodle:
