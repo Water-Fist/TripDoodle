@@ -1,23 +1,12 @@
 package database
 
 import (
-	"backend/model"
 	"database/sql"
 	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
-
-type Dbinstance struct {
-	Db *gorm.DB
-}
-
-var DB Dbinstance
 
 func init() {
 	// Load .env file
@@ -34,9 +23,6 @@ func init() {
 	dbname = os.Getenv("DB_NAME")
 }
 
-// Database instance
-var db *sql.DB
-
 // Database settings
 var (
 	host     string
@@ -46,22 +32,26 @@ var (
 	dbname   string
 )
 
-// connectDb
+type Dbinstance struct {
+	Db *sql.DB
+}
+
+var DB Dbinstance
+
 func ConnectDb() {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai", host, port, user, password, dbname)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		log.Fatal("Failed to connect to database. \n", err)
+	}
 
+	err = db.Ping()
 	if err != nil {
 		log.Fatal("Failed to connect to database. \n", err)
 	}
 
 	log.Println("connected")
-	db.Logger = logger.Default.LogMode(logger.Info)
-	log.Println("running migrations")
-	db.AutoMigrate(&model.Post{})
 
 	DB = Dbinstance{
 		Db: db,
