@@ -9,7 +9,4 @@ services:
     ports:
       - 5433:5432
     volumes:
-      - tripdoodle:/var/lib/postgresql/data
-
-volumes:
-  tripdoodle:
+      - ./db/data:/var/lib/postgresql/data
