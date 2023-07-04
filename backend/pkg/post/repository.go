@@ -77,9 +77,13 @@ func (r *repository) UpdatePost(post *entities.Post) (*entities.Post, error) {
 }
 
 func (r *repository) DeletePost(ID string) error {
-	query := `DELETE FROM posts WHERE id = $1`
+	//query := `DELETE FROM posts WHERE id = $1`
 
-	_, err := r.Db.Exec(query, ID)
+	// 실제 데이터 삭제가 아닌 is_deleted를 true로 변경
+	query := `UPDATE posts SET is_deleted = $1, deleted_at = $2 WHERE id = $3`
+
+	_, err := r.Db.Exec(query, true, time.Now(), ID)
+
 	if err != nil {
 		return err
 	}
