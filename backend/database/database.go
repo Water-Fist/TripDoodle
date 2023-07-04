@@ -1,11 +1,13 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"time"
 )
 
 func init() {
@@ -32,13 +34,7 @@ var (
 	dbname   string
 )
 
-type Dbinstance struct {
-	Db *sql.DB
-}
-
-var DB Dbinstance
-
-func ConnectDb() {
+func databaseConnection() (*sql.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai", host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", dsn)
@@ -46,14 +42,12 @@ func ConnectDb() {
 		log.Fatal("Failed to connect to database. \n", err)
 	}
 
-	err = db.Ping()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
 	if err != nil {
-		log.Fatal("Failed to connect to database. \n", err)
+		return nil, err
 	}
-
-	log.Println("connected")
-
-	DB = Dbinstance{
-		Db: db,
-	}
+	return db, nil
 }
