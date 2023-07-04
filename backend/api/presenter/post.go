@@ -6,12 +6,11 @@ import (
 )
 
 type Post struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
-	ImageUrl  string `json:"imageUrl"`
-	State     bool   `json:"state"`
-	IsDeleted bool   `json:"isDeleted"`
+	ID       int    `json:"id"`
+	Title    string `json:"title"`
+	Content  string `json:"content"`
+	ImageUrl string `json:"imageUrl"`
+	State    bool   `json:"state"`
 }
 
 func PostSuccessResponse(data *entities.Post) *fiber.Map {
