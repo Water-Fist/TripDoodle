@@ -3,6 +3,7 @@ package main
 import (
 	"backend/api/routes"
 	"backend/pkg/post"
+	"backend/pkg/sight"
 	"context"
 	"database/sql"
 	"fmt"
@@ -26,6 +27,8 @@ func main() {
 
 	postRepo := post.NewRepo(db)
 	postService := post.NewService(postRepo)
+	sightRepo := sight.NewRepo(db)
+	sightService := sight.NewService(sightRepo)
 
 	app := fiber.New()
 	app.Use(cors.New())
@@ -34,6 +37,7 @@ func main() {
 	})
 	api := app.Group("/api")
 	routes.PostRouter(api, postService)
+	routes.SightRouter(api, sightService)
 
 	log.Fatal(app.Listen(":3000"))
 }
