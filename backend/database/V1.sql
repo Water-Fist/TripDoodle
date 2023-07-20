@@ -1,5 +1,5 @@
 CREATE TABLE sights (
-                        id INT PRIMARY KEY,
+                        id SERIAL PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         latitude VARCHAR(255) NOT NULL,
                         longitude VARCHAR(255) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE sights (
 );
 
 CREATE TABLE posts (
-                       id INT PRIMARY KEY,
+                       id SERIAL PRIMARY KEY,
                        title VARCHAR(255) NOT NULL,
                        content TEXT NOT NULL,
                        image_url VARCHAR(255),
@@ -23,3 +23,7 @@ CREATE TABLE posts (
                        sight_id INT,
                        FOREIGN KEY (sight_id) REFERENCES sights(id)
 );
+
+CREATE TABLE user (
+
+)
