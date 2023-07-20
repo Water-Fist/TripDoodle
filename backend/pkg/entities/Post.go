@@ -9,6 +9,7 @@ type Post struct {
 	ImageUrl  string    `json:"imageUrl"`
 	State     bool      `json:"state"`
 	IsDeleted bool      `json:"isDeleted"`
+	SightId   int       `json:"sightId"`
 	DeletedAt time.Time `json:"deletedAt"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`

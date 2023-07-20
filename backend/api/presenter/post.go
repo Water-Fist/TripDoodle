@@ -11,6 +11,7 @@ type Post struct {
 	Content  string `json:"content"`
 	ImageUrl string `json:"imageUrl"`
 	State    bool   `json:"state"`
+	SightID  int    `json:"sightId"`
 }
 
 func PostSuccessResponse(data *entities.Post) *fiber.Map {
@@ -20,6 +21,7 @@ func PostSuccessResponse(data *entities.Post) *fiber.Map {
 		Content:  data.Content,
 		ImageUrl: data.ImageUrl,
 		State:    data.State,
+		SightID:  data.SightId,
 	}
 	return &fiber.Map{
 		"state": true,
