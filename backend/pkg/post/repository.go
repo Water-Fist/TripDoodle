@@ -28,9 +28,9 @@ func (r *repository) CreatePost(post *entities.Post) (*entities.Post, error) {
 	query :=
 		`
 			INSERT INTO 
-			    posts (title, content, image_url, state, is_deleted, created_at, updated_at) 
+			    posts (title, content, image_url, state, sight_id, is_deleted, created_at, updated_at) 
 			VALUES 
-			    ($1, $2, $3, $4, $5, $6, $7) 
+			    ($1, $2, $3, $4, $5, $6, $7, $8) 
 			RETURNING id
 		`
 
@@ -38,7 +38,7 @@ func (r *repository) CreatePost(post *entities.Post) (*entities.Post, error) {
 	post.CreatedAt = time.Now()
 	post.UpdatedAt = time.Now()
 
-	err := r.Db.QueryRow(query, post.Title, post.Content, post.ImageUrl, post.State, post.IsDeleted, post.CreatedAt, post.UpdatedAt).Scan(&post.ID)
+	err := r.Db.QueryRow(query, post.Title, post.Content, post.ImageUrl, post.State, post.SightId, post.IsDeleted, post.CreatedAt, post.UpdatedAt).Scan(&post.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,8 @@ func (r *repository) ReadPost() (*[]presenter.Post, error) {
     			title,
     			content,
     			image_url, 
-    			state
+    			state,
+				sight_id
 			FROM 
 			    posts 
 			WHERE 
@@ -69,7 +70,7 @@ func (r *repository) ReadPost() (*[]presenter.Post, error) {
 	var posts []presenter.Post
 	for rows.Next() {
 		var post presenter.Post
-		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.ImageUrl, &post.State)
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.ImageUrl, &post.State, &post.SightID)
 		if err != nil {
 			return nil, err
 		}
