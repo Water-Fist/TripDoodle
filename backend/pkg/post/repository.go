@@ -1,7 +1,7 @@
 package post
 
 import (
-	"backend/api/presenter"
+	"backend/api/presenter/response"
 	"backend/pkg/entities"
 	"database/sql"
 	"time"
@@ -9,7 +9,7 @@ import (
 
 type Repository interface {
 	CreatePost(Post *entities.Post) (*entities.Post, error)
-	ReadPost() (*[]presenter.Post, error)
+	ReadPost() (*[]response.Post, error)
 	UpdatePost(Post *entities.Post) (*entities.Post, error)
 	DeletePost(ID string) error
 }
@@ -45,7 +45,7 @@ func (r *repository) CreatePost(post *entities.Post) (*entities.Post, error) {
 	return post, nil
 }
 
-func (r *repository) ReadPost() (*[]presenter.Post, error) {
+func (r *repository) ReadPost() (*[]response.Post, error) {
 	query :=
 		`
 			SELECT
@@ -67,9 +67,9 @@ func (r *repository) ReadPost() (*[]presenter.Post, error) {
 	}
 	defer rows.Close()
 
-	var posts []presenter.Post
+	var posts []response.Post
 	for rows.Next() {
-		var post presenter.Post
+		var post response.Post
 		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.ImageUrl, &post.State, &post.SightID)
 		if err != nil {
 			return nil, err

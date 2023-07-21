@@ -1,13 +1,13 @@
 package post
 
 import (
-	"backend/api/presenter"
+	"backend/api/presenter/response"
 	"backend/pkg/entities"
 )
 
 type Service interface {
 	InsertPost(post *entities.Post) (*entities.Post, error)
-	FetchPosts() (*[]presenter.Post, error)
+	FetchPosts() (*[]response.Post, error)
 	UpdatePost(post *entities.Post) (*entities.Post, error)
 	RemovePost(ID string) error
 }
@@ -26,7 +26,7 @@ func (s *service) InsertPost(post *entities.Post) (*entities.Post, error) {
 	return s.repository.CreatePost(post)
 }
 
-func (s *service) FetchPosts() (*[]presenter.Post, error) {
+func (s *service) FetchPosts() (*[]response.Post, error) {
 	return s.repository.ReadPost()
 }
 

@@ -1,7 +1,7 @@
 package sight
 
 import (
-	"backend/api/presenter"
+	"backend/api/presenter/response"
 	"backend/pkg/entities"
 	"database/sql"
 	"time"
@@ -9,7 +9,7 @@ import (
 
 type Repository interface {
 	CreateSight(Sight *entities.Sight) (*entities.Sight, error)
-	ReadSight() (*[]presenter.Sight, error)
+	ReadSight() (*[]response.Sight, error)
 	UpdateSight(Sight *entities.Sight) (*entities.Sight, error)
 	DeleteSight(ID string) error
 	LoadSight(Latitude float32, Longitude float32) error
@@ -46,7 +46,7 @@ func (r *repository) CreateSight(sight *entities.Sight) (*entities.Sight, error)
 	return sight, nil
 }
 
-func (r *repository) ReadSight() (*[]presenter.Sight, error) {
+func (r *repository) ReadSight() (*[]response.Sight, error) {
 	query :=
 		`
 			SELECT
@@ -67,9 +67,9 @@ func (r *repository) ReadSight() (*[]presenter.Sight, error) {
 	}
 	defer rows.Close()
 
-	var sights []presenter.Sight
+	var sights []response.Sight
 	for rows.Next() {
-		var sight presenter.Sight
+		var sight response.Sight
 		err := rows.Scan(&sight.ID, &sight.Name, &sight.Latitude, &sight.Longitude, &sight.Area)
 		if err != nil {
 			return nil, err
