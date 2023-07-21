@@ -12,6 +12,7 @@ type Repository interface {
 	ReadSight() (*[]presenter.Sight, error)
 	UpdateSight(Sight *entities.Sight) (*entities.Sight, error)
 	DeleteSight(ID string) error
+	LoadSight(Latitude float32, Longitude float32) error
 }
 
 type repository struct {
@@ -124,6 +125,26 @@ func (r *repository) DeleteSight(ID string) error {
 		`
 
 	_, err := r.Db.Exec(query, true, time.Now(), ID)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) LoadSight(Latitude float32, Longitude float32) error {
+	query :=
+		`
+		SELECT
+			id,
+			name
+		FROM 
+			sights
+		WHERE 
+		    earth_box(ll_to_earth($1, $2), 1000) @> ll_to_earth(latitude, longitude);
+		`
+
+	_, err := r.Db.Exec(query, Latitude, Longitude)
 
 	if err != nil {
 		return err
