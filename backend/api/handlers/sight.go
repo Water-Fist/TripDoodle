@@ -17,7 +17,7 @@ func AddSight(service sight.Service) fiber.Handler {
 			c.Status(http.StatusBadRequest)
 			return c.JSON(presenter.SightErrorResponse(err))
 		}
-		if requestBody.Name == "" || requestBody.Longitude == "" || requestBody.Latitude == "" {
+		if requestBody.Name == "" {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(presenter.SightErrorResponse(errors.New(
 				"Please specify title and content")))
