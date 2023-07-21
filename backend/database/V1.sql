@@ -1,8 +1,8 @@
 CREATE TABLE sights (
                         id SERIAL PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
-                        latitude VARCHAR(255) NOT NULL,
-                        longitude VARCHAR(255) NOT NULL,
+                        latitude REAL NOT NULL,
+                        longitude REAL NOT NULL,
                         area BOOLEAN NOT NULL,
                         is_deleted BOOLEAN NOT NULL,
                         deleted_at TIMESTAMP,
