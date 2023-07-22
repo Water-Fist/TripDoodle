@@ -14,7 +14,3 @@ type Post struct {
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
-
-type DeleteRequest struct {
-	ID string `json:"id"`
-}
