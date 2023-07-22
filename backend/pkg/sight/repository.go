@@ -137,8 +137,8 @@ func (r *repository) LoadSight(Latitude float32, Longitude float32) (*[]response
 		`
 		SELECT
 			id,
-			name
-			latitude, 
+			name,
+			latitude,
 			longitude,
 			area
 		FROM 
