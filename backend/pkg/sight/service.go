@@ -10,6 +10,7 @@ type Service interface {
 	FetchSights() (*[]response.Sight, error)
 	UpdateSight(sight *entities.Sight) (*entities.Sight, error)
 	RemoveSight(ID string) error
+	LoadSight(Latitude float32, Longitude float32) (*[]response.Sight, error)
 }
 
 type service struct {
@@ -38,6 +39,6 @@ func (s *service) RemoveSight(ID string) error {
 	return s.repository.DeleteSight(ID)
 }
 
-func (s *service) LoadSight(Latitude float32, Longitude float32) error {
+func (s *service) LoadSight(Latitude float32, Longitude float32) (*[]response.Sight, error) {
 	return s.repository.LoadSight(Latitude, Longitude)
 }
