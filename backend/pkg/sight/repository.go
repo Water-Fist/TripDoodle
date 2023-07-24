@@ -1,7 +1,7 @@
 package sight
 
 import (
-	"backend/api/presenter"
+	"backend/api/presenter/response"
 	"backend/pkg/entities"
 	"database/sql"
 	"time"
@@ -9,9 +9,10 @@ import (
 
 type Repository interface {
 	CreateSight(Sight *entities.Sight) (*entities.Sight, error)
-	ReadSight() (*[]presenter.Sight, error)
+	ReadSight() (*[]response.Sight, error)
 	UpdateSight(Sight *entities.Sight) (*entities.Sight, error)
 	DeleteSight(ID string) error
+	LoadSight(Latitude float32, Longitude float32) (*[]response.Sight, error)
 }
 
 type repository struct {
@@ -45,7 +46,7 @@ func (r *repository) CreateSight(sight *entities.Sight) (*entities.Sight, error)
 	return sight, nil
 }
 
-func (r *repository) ReadSight() (*[]presenter.Sight, error) {
+func (r *repository) ReadSight() (*[]response.Sight, error) {
 	query :=
 		`
 			SELECT
@@ -66,9 +67,9 @@ func (r *repository) ReadSight() (*[]presenter.Sight, error) {
 	}
 	defer rows.Close()
 
-	var sights []presenter.Sight
+	var sights []response.Sight
 	for rows.Next() {
-		var sight presenter.Sight
+		var sight response.Sight
 		err := rows.Scan(&sight.ID, &sight.Name, &sight.Latitude, &sight.Longitude, &sight.Area)
 		if err != nil {
 			return nil, err
@@ -129,4 +130,43 @@ func (r *repository) DeleteSight(ID string) error {
 		return err
 	}
 	return nil
+}
+
+func (r *repository) LoadSight(Latitude float32, Longitude float32) (*[]response.Sight, error) {
+	query :=
+		`
+		SELECT
+			id,
+			name,
+			latitude,
+			longitude,
+			area
+		FROM 
+			sights
+		WHERE 
+		    earth_box(ll_to_earth($1, $2), 1000) @> ll_to_earth(latitude, longitude)
+		    AND
+			is_deleted = false
+		`
+
+	rows, err := r.Db.Query(query, Latitude, Longitude)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var sights []response.Sight
+	for rows.Next() {
+		var sight response.Sight
+		err := rows.Scan(&sight.ID, &sight.Name, &sight.Latitude, &sight.Longitude, &sight.Area)
+		if err != nil {
+			return nil, err
+		}
+		sights = append(sights, sight)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return &sights, nil
 }

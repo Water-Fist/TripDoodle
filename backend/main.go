@@ -36,8 +36,9 @@ func main() {
 		return c.SendString("Pingpong by fiber\n")
 	})
 	api := app.Group("/api")
-	routes.PostRouter(api, postService)
-	routes.SightRouter(api, sightService)
+	v1 := api.Group("/v1")
+	routes.PostRouter(v1, postService)
+	routes.SightRouter(v1, sightService)
 
 	log.Fatal(app.Listen(":3000"))
 }
