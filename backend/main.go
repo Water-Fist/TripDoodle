@@ -2,7 +2,6 @@ package main
 
 import (
 	"backend/api/routes"
-	"backend/database"
 	"backend/pkg/post"
 	"backend/pkg/sight"
 	"context"
@@ -26,7 +25,9 @@ func main() {
 	}
 	fmt.Println("Database connection success!")
 
-	database.SightsInsert(db)
+	// 관광지 데이터 DB 적재 시에 사용
+	//database.SightsInsert(db)
+
 	postRepo := post.NewRepo(db)
 	postService := post.NewService(postRepo)
 	sightRepo := sight.NewRepo(db)
