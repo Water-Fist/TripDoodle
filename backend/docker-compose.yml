@@ -1,7 +1,7 @@
 version: '3'
 services:
   DB:
-    image: postgres
+    image: postgis/postgis
     restart: always
     environment:
       POSTGRES_USER: root
@@ -10,3 +10,17 @@ services:
       - 5433:5432
     volumes:
       - ./db/data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "5555:80"
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=example@pgadmin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin
+      - TZ=Asia/Seoul
+    depends_on:
+      - DB
