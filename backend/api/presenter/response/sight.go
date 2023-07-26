@@ -19,6 +19,11 @@ type Sight struct {
 	Longitude          float32 `json:"longitude"`
 }
 
+type SightLoad struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 func SightSuccessResponse(data *entities.Sight) *fiber.Map {
 	sight := Sight{
 		ID:                 data.ID,
@@ -33,7 +38,6 @@ func SightSuccessResponse(data *entities.Sight) *fiber.Map {
 		StreetNumber:       data.StreetNumber,
 		BuildingNumber:     data.BuildingNumber,
 	}
-
 	return &fiber.Map{
 		"state": true,
 		"data":  sight,
@@ -42,6 +46,14 @@ func SightSuccessResponse(data *entities.Sight) *fiber.Map {
 }
 
 func SightsSuccessResponse(data *[]Sight) *fiber.Map {
+	return &fiber.Map{
+		"state": true,
+		"data":  data,
+		"error": nil,
+	}
+}
+
+func SightsLoadSuccessResponse(data *[]SightLoad) *fiber.Map {
 	return &fiber.Map{
 		"state": true,
 		"data":  data,

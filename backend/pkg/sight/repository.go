@@ -12,7 +12,7 @@ type Repository interface {
 	ReadSight() (*[]response.Sight, error)
 	UpdateSight(Sight *entities.Sight) (*entities.Sight, error)
 	DeleteSight(ID string) error
-	LoadSight(Latitude float32, Longitude float32) (*[]response.Sight, error)
+	LoadSight(Latitude float32, Longitude float32) (*[]response.SightLoad, error)
 }
 
 type repository struct {
@@ -159,32 +159,34 @@ func (r *repository) DeleteSight(ID string) error {
 	return nil
 }
 
-func (r *repository) LoadSight(Latitude float32, Longitude float32) (*[]response.Sight, error) {
+func (r *repository) LoadSight(Latitude float32, Longitude float32) (*[]response.SightLoad, error) {
 	query :=
 		`
 		SELECT
 			id,
-			name,
-			latitude,
-			longitude
-		FROM 
+			name
+		FROM
 			sights
-		WHERE 
-		    earth_box(ll_to_earth($1, $2), 1000) @> ll_to_earth(latitude, longitude)
-		    AND
-			is_deleted = false
+		WHERE
+			ST_DWithin(
+				geography(ST_SetSRID(ST_Point(longitude, latitude), 4326)),
+				geography(ST_SetSRID(ST_Point($1, $2), 4326)),
+			1000
+				)
+		AND
+			is_deleted = false;
 		`
 
-	rows, err := r.Db.Query(query, Latitude, Longitude)
+	rows, err := r.Db.Query(query, Longitude, Latitude)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var sights []response.Sight
+	var sights []response.SightLoad
 	for rows.Next() {
-		var sight response.Sight
-		err := rows.Scan(&sight.ID, &sight.Name, &sight.Latitude, &sight.Longitude)
+		var sight response.SightLoad
+		err := rows.Scan(&sight.ID, &sight.Name)
 		if err != nil {
 			return nil, err
 		}

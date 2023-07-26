@@ -95,6 +95,6 @@ func LoadSight(service sight.Service) fiber.Handler {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(response.SightErrorResponse(err))
 		}
-		return c.JSON(response.SightsSuccessResponse(result))
+		return c.JSON(response.SightsLoadSuccessResponse(result))
 	}
 }
