@@ -1,9 +1,9 @@
 package routes
 
 import (
-	handler "backend/api/handlers"
-	"backend/pkg/sight"
 	"github.com/gofiber/fiber/v2"
+	handler "server/api/handlers"
+	"server/pkg/sight"
 )
 
 func SightRouter(app fiber.Router, service sight.Service) {

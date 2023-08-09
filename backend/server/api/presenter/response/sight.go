@@ -1,8 +1,8 @@
 package response
 
 import (
-	"backend/pkg/entities"
 	"github.com/gofiber/fiber/v2"
+	"server/pkg/entities"
 )
 
 type Sight struct {

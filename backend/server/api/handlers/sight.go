@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"backend/api/presenter/request"
-	"backend/api/presenter/response"
-	"backend/pkg/entities"
-	"backend/pkg/sight"
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
+	"server/api/presenter/request"
+	"server/api/presenter/response"
+	"server/pkg/entities"
+	"server/pkg/sight"
 )
 
 func AddSight(service sight.Service) fiber.Handler {

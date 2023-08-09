@@ -1,8 +1,8 @@
 package sight
 
 import (
-	"backend/api/presenter/response"
-	"backend/pkg/entities"
+	"server/api/presenter/response"
+	"server/pkg/entities"
 )
 
 type Service interface {
