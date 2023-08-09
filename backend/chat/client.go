@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -37,15 +38,25 @@ type Client struct {
 	wsServer *WsServer
 	// 메시지를 보내는 채널
 	send chan []byte
+	// 클라이언트가 속한 채팅방 목록
+	rooms map[*Room]bool
+	// 클라이언트의 이름
+	Name string `json:"name"`
 }
 
 // 새로운 클라이언트 객체를 생성하는 함수
-func newClient(conn *websocket.Conn, wsServer *WsServer) *Client {
+func newClient(conn *websocket.Conn, wsServer *WsServer, name string) *Client {
 	return &Client{
+		Name:     name,
 		conn:     conn,
 		wsServer: wsServer,
 		send:     make(chan []byte, 256),
+		rooms:    make(map[*Room]bool),
 	}
+}
+
+func (client *Client) GetName() string {
+	return client.Name
 }
 
 // 클라이언트로부터 들어오는 메시지를 읽는 데 사용되는 함수
@@ -68,7 +79,7 @@ func (client *Client) readPump() {
 			break
 		}
 
-		client.wsServer.broadcast <- jsonMessage
+		client.handleNewMessage(jsonMessage)
 	}
 
 }
@@ -126,12 +137,25 @@ func (client *Client) writePump() {
 // 클라이언트를 연결 해제하는 함수
 func (client *Client) disconnect() {
 	client.wsServer.unregister <- client
+	for room := range client.rooms {
+		room.unregister <- client
+	}
+
+	client.wsServer.unregister <- client
 	close(client.send)
 	client.conn.Close()
 }
 
 // 새로운 클라이언트 WebSocket 연결을 처리하는 함수
 func ServeWs(wsServer *WsServer, w http.ResponseWriter, r *http.Request) {
+
+	// URL 쿼리 매개변수에서 name 값을 가져옵니다.
+	name, ok := r.URL.Query()["name"]
+
+	if !ok || len(name[0]) < 1 {
+		log.Println("Url Param 'name' is missing")
+		return
+	}
 
 	// 일반 HTTP 연결을 WebSocket 연결로 업그레이드
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -141,7 +165,7 @@ func ServeWs(wsServer *WsServer, w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 새로운 Client 객체를 생성
-	client := newClient(conn, wsServer)
+	client := newClient(conn, wsServer, name[0])
 
 	// 클라이언트의 메시지를 읽고 쓰는 데 사용되는 고루틴을 시작
 	go client.writePump()
@@ -149,4 +173,55 @@ func ServeWs(wsServer *WsServer, w http.ResponseWriter, r *http.Request) {
 
 	// 메인 서버 루프에 이 클라이언트를 등록하도록 요청
 	wsServer.register <- client
+}
+
+// 클라이언트가 새로운 메시지를 받을 때 호출되는 함수
+func (client *Client) handleNewMessage(jsonMessage []byte) {
+
+	var message Message
+	if err := json.Unmarshal(jsonMessage, &message); err != nil {
+		log.Printf("Error on unmarshal JSON message %s", err)
+	}
+
+	message.Sender = client
+
+	switch message.Action {
+	// 특정 채팅방으로 메시지를 전송하려고 시도
+	case SendMessageAction:
+		roomName := message.Target
+		if room := client.wsServer.findRoomByName(roomName); room != nil {
+			room.broadcast <- &message
+		}
+	// 채팅방에 참가하려고 시도
+	case JoinRoomAction:
+		client.handleJoinRoomMessage(message)
+	// 채팅방에서 나가려고 시도
+	case LeaveRoomAction:
+		client.handleLeaveRoomMessage(message)
+	}
+}
+
+// 클라이언트가 채팅방에 참가할 때 호출되는 함수
+func (client *Client) handleJoinRoomMessage(message Message) {
+	roomName := message.Message
+
+	room := client.wsServer.findRoomByName(roomName)
+	if room == nil {
+		room = client.wsServer.createRoom(roomName)
+	}
+
+	client.rooms[room] = true
+
+	room.register <- client
+}
+
+// 클라이언트가 채팅방에서 나갈 때 호출되는 함수
+func (client *Client) handleLeaveRoomMessage(message Message) {
+	room := client.wsServer.findRoomByName(message.Message)
+	if _, ok := client.rooms[room]; ok {
+		// 클라이언트의 rooms 맵에서 해당 방을 찾아 삭제
+		delete(client.rooms, room)
+	}
+
+	room.unregister <- client
 }

@@ -5,6 +5,7 @@ type WsServer struct {
 	register   chan *Client
 	unregister chan *Client
 	broadcast  chan []byte
+	rooms      map[*Room]bool
 }
 
 func NewWebsocketServer() *WsServer {
@@ -17,6 +18,8 @@ func NewWebsocketServer() *WsServer {
 		unregister: make(chan *Client),
 		// 브로드캐스트 채널
 		broadcast: make(chan []byte),
+		// 현재 생성된 모든 채팅방을 저장하는 맵
+		rooms: make(map[*Room]bool),
 	}
 }
 
@@ -55,4 +58,26 @@ func (server *WsServer) broadcastToClients(message []byte) {
 	for client := range server.clients {
 		client.send <- message
 	}
+}
+
+// 주어진 이름의 채팅방을 찾아서 반환하는 함수
+func (server *WsServer) findRoomByName(name string) *Room {
+	var foundRoom *Room
+	for room := range server.rooms {
+		if room.GetName() == name {
+			foundRoom = room
+			break
+		}
+	}
+
+	return foundRoom
+}
+
+// 주어진 이름의 채팅방이 존재하면 해당 채팅방을 반환하고, 존재하지 않으면 새로운 채팅방을 생성하여 반환하는 함수
+func (server *WsServer) createRoom(name string) *Room {
+	room := NewRoom(name)
+	go room.RunRoom()
+	server.rooms[room] = true
+
+	return room
 }
