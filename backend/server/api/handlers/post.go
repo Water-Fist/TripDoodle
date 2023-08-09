@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"backend/api/presenter/request"
-	"backend/api/presenter/response"
-	"backend/pkg/entities"
-	"backend/pkg/post"
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
+	"server/api/presenter/request"
+	"server/api/presenter/response"
+	"server/pkg/entities"
+	"server/pkg/post"
 )
 
 func AddPost(service post.Service) fiber.Handler {

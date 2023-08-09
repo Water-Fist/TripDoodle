@@ -1,9 +1,9 @@
 package post
 
 import (
-	"backend/api/presenter/response"
-	"backend/pkg/entities"
 	"database/sql"
+	"server/api/presenter/response"
+	"server/pkg/entities"
 	"time"
 )
 

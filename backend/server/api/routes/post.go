@@ -1,9 +1,9 @@
 package routes
 
 import (
-	handler "backend/api/handlers"
-	"backend/pkg/post"
 	"github.com/gofiber/fiber/v2"
+	handler "server/api/handlers"
+	"server/pkg/post"
 )
 
 func PostRouter(app fiber.Router, service post.Service) {

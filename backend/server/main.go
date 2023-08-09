@@ -1,9 +1,6 @@
 package main
 
 import (
-	"backend/api/routes"
-	"backend/pkg/post"
-	"backend/pkg/sight"
 	"context"
 	"database/sql"
 	"fmt"
@@ -13,6 +10,9 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
+	"server/api/routes"
+	"server/pkg/post"
+	"server/pkg/sight"
 	"time"
 )
 
