@@ -1,4 +1,4 @@
 .idea
-go.sum
-.env
+server/go.sum
+server/.env
 db
