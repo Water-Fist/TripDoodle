@@ -1,4 +1,8 @@
 .idea
+
 server/go.sum
 server/.env
+
+chat/go.sum
+
 db
