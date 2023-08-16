@@ -3,5 +3,102 @@
     "info": {
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/sights": {
+            "get": {
+                "description": "Fetch all sights from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sights"
+                ],
+                "summary": "Get all sights",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightsSuccessResponseType"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightsErrorResponseType"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "response.Sight": {
+            "type": "object",
+            "properties": {
+                "buildingNumber": {
+                    "type": "string"
+                },
+                "cityCountyDistrict": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "legalDong": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "ri": {
+                    "type": "string"
+                },
+                "streetNumber": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.SightsErrorResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Sight"
+                    }
+                },
+                "error": {},
+                "state": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.SightsSuccessResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Sight"
+                    }
+                },
+                "error": {},
+                "state": {
+                    "type": "boolean"
+                }
+            }
+        }
+    }
 }

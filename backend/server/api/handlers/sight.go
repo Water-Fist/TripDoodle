@@ -71,6 +71,13 @@ func RemoveSight(service sight.Service) fiber.Handler {
 	}
 }
 
+// @Summary Get all sights
+// @Description Fetch all sights from the database
+// @Tags sights
+// @Produce json
+// @Success 200 {object} response.SightsSuccessResponseType
+// @Failure 500 {object} response.SightsErrorResponseType
+// @Router /sights [get]
 func GetSights(service sight.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		fetched, err := service.FetchSights()

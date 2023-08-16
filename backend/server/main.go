@@ -8,6 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
+	_ "github.com/swaggo/fiber-swagger/example/docs"
 	"log"
 	"os"
 	"server/api/routes"
@@ -16,6 +18,20 @@ import (
 	"time"
 )
 
+// @title Swagger Example API
+// @version 1.0
+// @description This is a sample server Petstore server.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host petstore.swagger.io
+// @BasePath /v2
 func main() {
 	// Connect with database
 	db, err := databaseConnection()
@@ -34,16 +50,16 @@ func main() {
 	sightService := sight.NewService(sightRepo)
 
 	app := fiber.New()
+
 	app.Use(cors.New())
-	app.Get("/ping", func(c *fiber.Ctx) error {
-		return c.SendString("Pingpong by fiber\n")
-	})
+
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 	routes.PostRouter(v1, postService)
 	routes.SightRouter(v1, sightService)
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":8080"))
 }
 
 func init() {
