@@ -45,6 +45,12 @@ func SightSuccessResponse(data *entities.Sight) *fiber.Map {
 	}
 }
 
+type SightSuccessResponseType struct {
+	State bool        `json:"state"`
+	Data  Sight       `json:"data"`
+	Error interface{} `json:"error"`
+}
+
 func SightsSuccessResponse(data *[]Sight) *fiber.Map {
 	return &fiber.Map{
 		"state": true,
@@ -75,8 +81,8 @@ func SightErrorResponse(err error) *fiber.Map {
 	}
 }
 
-type SightsErrorResponseType struct {
+type SightErrorResponseType struct {
 	State bool        `json:"state"`
-	Data  []Sight     `json:"data"`
+	Data  Sight       `json:"data"`
 	Error interface{} `json:"error"`
 }
