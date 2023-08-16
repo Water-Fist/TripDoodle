@@ -18,7 +18,7 @@ const docTemplate = `{
     "paths": {
         "/posts": {
             "get": {
-                "description": "Fetch all sights from the database",
+                "description": "Get all posts from the database",
                 "produces": [
                     "application/json"
                 ],
@@ -176,7 +176,7 @@ const docTemplate = `{
         },
         "/sights": {
             "get": {
-                "description": "Fetch all sights from the database",
+                "description": "Get all sights from the database",
                 "produces": [
                     "application/json"
                 ],
@@ -186,15 +186,195 @@ const docTemplate = `{
                 "summary": "Get all sights",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully Got the sight",
                         "schema": {
                             "$ref": "#/definitions/response.SightsSuccessResponseType"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/response.SightsErrorResponseType"
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update sight details in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sights"
+                ],
+                "summary": "Update an existing sight",
+                "parameters": [
+                    {
+                        "description": "Update sight",
+                        "name": "sight",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateSightRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated the sight",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightSuccessResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new sight to the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sights"
+                ],
+                "summary": "Add a new sight",
+                "parameters": [
+                    {
+                        "description": "Add Sight",
+                        "name": "sight",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SightRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added the sight",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightSuccessResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove a sight from the database based on its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sights"
+                ],
+                "summary": "Remove a sight",
+                "parameters": [
+                    {
+                        "description": "Update sight",
+                        "name": "sight",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DeleteSightRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully Removed the sight",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightSuccessResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/sights/location": {
+            "get": {
+                "description": "Gets information about the tourist attractions currently located in the database Fetch all sights from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sights"
+                ],
+                "summary": "Get Current sights",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "Latitude for the sight",
+                        "name": "Latitude",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Longitude for the sight",
+                        "name": "Longitude",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully Got the sight",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightsSuccessResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.SightErrorResponseType"
                         }
                     }
                 }
@@ -203,6 +383,14 @@ const docTemplate = `{
     },
     "definitions": {
         "request.DeletePostRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.DeleteSightRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -230,6 +418,41 @@ const docTemplate = `{
                 }
             }
         },
+        "request.SightRequest": {
+            "type": "object",
+            "properties": {
+                "buildingNumber": {
+                    "type": "string"
+                },
+                "cityCountyDistrict": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "legalDong": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "ri": {
+                    "type": "string"
+                },
+                "streetNumber": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "request.UpdatePostRequest": {
             "type": "object",
             "properties": {
@@ -246,6 +469,44 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UpdateSightRequest": {
+            "type": "object",
+            "properties": {
+                "buildingNumber": {
+                    "type": "string"
+                },
+                "cityCountyDistrict": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "legalDong": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "ri": {
+                    "type": "string"
+                },
+                "streetNumber": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -353,14 +614,23 @@ const docTemplate = `{
                 }
             }
         },
-        "response.SightsErrorResponseType": {
+        "response.SightErrorResponseType": {
             "type": "object",
             "properties": {
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/response.Sight"
-                    }
+                    "$ref": "#/definitions/response.Sight"
+                },
+                "error": {},
+                "state": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.SightSuccessResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/response.Sight"
                 },
                 "error": {},
                 "state": {
