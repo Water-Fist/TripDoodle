@@ -9,29 +9,21 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
-	_ "github.com/swaggo/fiber-swagger/example/docs"
 	"log"
 	"os"
 	"server/api/routes"
+	_ "server/docs"
 	"server/pkg/post"
 	"server/pkg/sight"
 	"time"
 )
 
-// @title Swagger Example API
+// @title TripDoodle API
 // @version 1.0
-// @description This is a sample server Petstore server.
-// @termsOfService http://swagger.io/terms/
+// @description TripDoodle Server API Docs
 
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host petstore.swagger.io
-// @BasePath /v2
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
 	// Connect with database
 	db, err := databaseConnection()
