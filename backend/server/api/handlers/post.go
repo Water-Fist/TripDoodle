@@ -101,7 +101,7 @@ func RemovePost(service post.Service) fiber.Handler {
 }
 
 // @Summary Get all posts
-// @Description Fetch all sights from the database
+// @Description Get all posts from the database
 // @Tags posts
 // @Produce json
 // @Success 200 {object} response.PostsSuccessResponseType
