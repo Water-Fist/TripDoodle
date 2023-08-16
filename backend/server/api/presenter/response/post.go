@@ -30,6 +30,12 @@ func PostSuccessResponse(data *entities.Post) *fiber.Map {
 	}
 }
 
+type PostSuccessResponseType struct {
+	State bool        `json:"state"`
+	Data  Post        `json:"data"`
+	Error interface{} `json:"error"`
+}
+
 func PostsSuccessResponse(data *[]Post) *fiber.Map {
 	return &fiber.Map{
 		"state": true,
@@ -38,10 +44,22 @@ func PostsSuccessResponse(data *[]Post) *fiber.Map {
 	}
 }
 
+type PostsSuccessResponseType struct {
+	State bool        `json:"state"`
+	Data  []Post      `json:"data"`
+	Error interface{} `json:"error"`
+}
+
 func PostErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"state": true,
 		"data":  "",
 		"error": err.Error(),
 	}
+}
+
+type PostErrorResponseType struct {
+	State bool        `json:"state"`
+	Data  []Post      `json:"data"`
+	Error interface{} `json:"error"`
 }
