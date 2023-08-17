@@ -8,14 +8,22 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"log"
 	"os"
 	"server/api/routes"
+	_ "server/docs"
 	"server/pkg/post"
 	"server/pkg/sight"
 	"time"
 )
 
+// @title TripDoodle API
+// @version 1.0
+// @description TripDoodle Server API Docs
+
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
 	// Connect with database
 	db, err := databaseConnection()
@@ -34,16 +42,16 @@ func main() {
 	sightService := sight.NewService(sightRepo)
 
 	app := fiber.New()
+
 	app.Use(cors.New())
-	app.Get("/ping", func(c *fiber.Ctx) error {
-		return c.SendString("Pingpong by fiber\n")
-	})
+
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 	routes.PostRouter(v1, postService)
 	routes.SightRouter(v1, sightService)
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":8080"))
 }
 
 func init() {

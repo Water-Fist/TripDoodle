@@ -1,0 +1,429 @@
+basePath: /api/v1
+definitions:
+  request.DeletePostRequest:
+    properties:
+      id:
+        type: string
+    type: object
+  request.DeleteSightRequest:
+    properties:
+      id:
+        type: string
+    type: object
+  request.PostRequest:
+    properties:
+      content:
+        type: string
+      imageUrl:
+        type: string
+      sightId:
+        type: integer
+      state:
+        type: boolean
+      title:
+        type: string
+    type: object
+  request.SightRequest:
+    properties:
+      buildingNumber:
+        type: string
+      cityCountyDistrict:
+        type: string
+      latitude:
+        type: number
+      legalDong:
+        type: string
+      longitude:
+        type: number
+      name:
+        type: string
+      province:
+        type: string
+      ri:
+        type: string
+      streetNumber:
+        type: string
+      type:
+        type: string
+    type: object
+  request.UpdatePostRequest:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      state:
+        type: boolean
+      title:
+        type: string
+    type: object
+  request.UpdateSightRequest:
+    properties:
+      buildingNumber:
+        type: string
+      cityCountyDistrict:
+        type: string
+      id:
+        type: integer
+      latitude:
+        type: number
+      legalDong:
+        type: string
+      longitude:
+        type: number
+      name:
+        type: string
+      province:
+        type: string
+      ri:
+        type: string
+      streetNumber:
+        type: string
+      type:
+        type: string
+    type: object
+  response.Post:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      sightId:
+        type: integer
+      state:
+        type: boolean
+      title:
+        type: string
+    type: object
+  response.PostErrorResponseType:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/response.Post'
+        type: array
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.PostSuccessResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/response.Post'
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.PostsSuccessResponseType:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/response.Post'
+        type: array
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.Sight:
+    properties:
+      buildingNumber:
+        type: string
+      cityCountyDistrict:
+        type: string
+      id:
+        type: integer
+      latitude:
+        type: number
+      legalDong:
+        type: string
+      longitude:
+        type: number
+      name:
+        type: string
+      province:
+        type: string
+      ri:
+        type: string
+      streetNumber:
+        type: string
+      type:
+        type: string
+    type: object
+  response.SightErrorResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/response.Sight'
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.SightSuccessResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/response.Sight'
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.SightsSuccessResponseType:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/response.Sight'
+        type: array
+      error: {}
+      state:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: TripDoodle Server API Docs
+  title: TripDoodle API
+  version: "1.0"
+paths:
+  /posts:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a post from the database based on its ID
+      parameters:
+      - description: Update post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/request.DeletePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Removed the post
+          schema:
+            $ref: '#/definitions/response.PostSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+      summary: Remove a post
+      tags:
+      - posts
+    get:
+      description: Get all posts from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PostsSuccessResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+      summary: Get all posts
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Add a new post to the database
+      parameters:
+      - description: Add post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/request.PostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added the post
+          schema:
+            $ref: '#/definitions/response.PostSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+      summary: Add a new post
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Update post details in the database
+      parameters:
+      - description: Update post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated the post
+          schema:
+            $ref: '#/definitions/response.PostSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.PostErrorResponseType'
+      summary: Update an existing post
+      tags:
+      - posts
+  /sights:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a sight from the database based on its ID
+      parameters:
+      - description: Update sight
+        in: body
+        name: sight
+        required: true
+        schema:
+          $ref: '#/definitions/request.DeleteSightRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Removed the sight
+          schema:
+            $ref: '#/definitions/response.SightSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+      summary: Remove a sight
+      tags:
+      - sights
+    get:
+      description: Get all sights from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Got the sight
+          schema:
+            $ref: '#/definitions/response.SightsSuccessResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+      summary: Get all sights
+      tags:
+      - sights
+    post:
+      consumes:
+      - application/json
+      description: Add a new sight to the database
+      parameters:
+      - description: Add Sight
+        in: body
+        name: sight
+        required: true
+        schema:
+          $ref: '#/definitions/request.SightRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added the sight
+          schema:
+            $ref: '#/definitions/response.SightSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+      summary: Add a new sight
+      tags:
+      - sights
+    put:
+      consumes:
+      - application/json
+      description: Update sight details in the database
+      parameters:
+      - description: Update sight
+        in: body
+        name: sight
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateSightRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated the sight
+          schema:
+            $ref: '#/definitions/response.SightSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+      summary: Update an existing sight
+      tags:
+      - sights
+  /sights/location:
+    get:
+      description: Gets information about the tourist attractions currently located
+        in the database Fetch all sights from the database
+      parameters:
+      - description: Latitude for the sight
+        in: query
+        name: Latitude
+        required: true
+        type: number
+      - description: Longitude for the sight
+        in: query
+        name: Longitude
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Got the sight
+          schema:
+            $ref: '#/definitions/response.SightsSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.SightErrorResponseType'
+      summary: Get Current sights
+      tags:
+      - sights
+swagger: "2.0"
