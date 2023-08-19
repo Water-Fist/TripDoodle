@@ -1,14 +1,32 @@
 package main
 
+import (
+	"context"
+	"github.com/redis/go-redis/v9"
+	"log"
+)
+
 type WsServer struct {
-	clients    map[*Client]bool
-	register   chan *Client
-	unregister chan *Client
-	broadcast  chan []byte
-	rooms      map[*Room]bool
+	clients     map[*Client]bool
+	register    chan *Client
+	unregister  chan *Client
+	broadcast   chan []byte
+	rooms       map[*Room]bool
+	redisClient *redis.Client
+	ctx         context.Context
 }
 
 func NewWebsocketServer() *WsServer {
+	rdb := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379", // Redis 주소 설정
+	})
+	_, err := rdb.Ping(context.Background()).Result()
+	if err != nil {
+		log.Fatalf("Could not connect to Redis: %v", err)
+	} else {
+		log.Println("Connected to Redis successfully!")
+	}
+
 	return &WsServer{
 		// 현재 연결된 모든 WebSocket 클라이언트를 저장하는 맵
 		clients: make(map[*Client]bool),
@@ -19,8 +37,11 @@ func NewWebsocketServer() *WsServer {
 		// 브로드캐스트 채널
 		broadcast: make(chan []byte),
 		// 현재 생성된 모든 채팅방을 저장하는 맵
-		rooms: make(map[*Room]bool),
+		rooms:       make(map[*Room]bool),
+		redisClient: rdb,
+		ctx:         context.Background(),
 	}
+
 }
 
 // 각각의 메시지에 따라 해당 클라이언트를 등록하거나 등록 해제하는 작업을 수행합니다.
@@ -44,19 +65,35 @@ func (server *WsServer) Run() {
 // 주어진 클라이언트를 clients 맵에 추가하는 함수
 func (server *WsServer) registerClient(client *Client) {
 	server.clients[client] = true
+
+	// Redis Pub/Sub 구독 시작
+	pubsub := server.redisClient.Subscribe(server.ctx, "chat")
+	client.subscriber = pubsub
+
+	go func() {
+		ch := pubsub.Channel()
+		for msg := range ch {
+			client.send <- []byte(msg.Payload)
+		}
+	}()
 }
 
 // 주어진 클라이언트를 clients 맵에서 제거하는 함수
 func (server *WsServer) unregisterClient(client *Client) {
 	if _, ok := server.clients[client]; ok {
+		log.Printf("Unregistering client: %v", client)
 		delete(server.clients, client)
+		client.subscriber.Close()
 	}
 }
 
 // 주어진 메시지를 모든 클라이언트에게 전송하는 함수
 func (server *WsServer) broadcastToClients(message []byte) {
-	for client := range server.clients {
-		client.send <- message
+	err := server.redisClient.Publish(server.ctx, "chat", string(message)).Err()
+	if err != nil {
+		log.Printf("Error publishing message: %v", err)
+	} else {
+		log.Println("message published successfully!")
 	}
 }
 

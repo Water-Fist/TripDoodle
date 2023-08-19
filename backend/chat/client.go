@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/redis/go-redis/v9"
 	"log"
 	"net/http"
 	"time"
@@ -41,7 +42,8 @@ type Client struct {
 	// 클라이언트가 속한 채팅방 목록
 	rooms map[*Room]bool
 	// 클라이언트의 이름
-	Name string `json:"name"`
+	Name       string `json:"name"`
+	subscriber *redis.PubSub
 }
 
 // 새로운 클라이언트 객체를 생성하는 함수
@@ -190,7 +192,7 @@ func (client *Client) handleNewMessage(jsonMessage []byte) {
 	case SendMessageAction:
 		roomName := message.Target
 		if room := client.wsServer.findRoomByName(roomName); room != nil {
-			room.broadcast <- &message
+			client.wsServer.broadcastToClients(jsonMessage)
 		}
 	// 채팅방에 참가하려고 시도
 	case JoinRoomAction:
