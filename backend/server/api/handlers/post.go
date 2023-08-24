@@ -22,16 +22,19 @@ import (
 func AddPost(service post.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var requestBody request.PostRequest
+
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			c.Status(http.StatusBadRequest)
 			return c.JSON(response.PostErrorResponse(err))
 		}
-		if requestBody.Content == "" || requestBody.Title == "" {
-			c.Status(http.StatusInternalServerError)
+
+		if requestBody.Content == "" || requestBody.Title == "" || requestBody.SightID == 0 {
+			c.Status(http.StatusBadRequest)
 			return c.JSON(response.PostErrorResponse(errors.New(
-				"Please specify title and content")))
+				"Please specify title and content and sightId")))
 		}
+
 		result, err := service.InsertPost(&requestBody)
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
