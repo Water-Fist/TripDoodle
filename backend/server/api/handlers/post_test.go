@@ -87,6 +87,7 @@ func TestAddPost(t *testing.T) {
 		resp, _ := app.Test(req)
 
 		assert.Equal(t, 500, resp.StatusCode)
+		mockService.AssertExpectations(t)
 	})
 
 	t.Run("성공 시, 200 반환", func(t *testing.T) {
@@ -110,9 +111,8 @@ func TestAddPost(t *testing.T) {
 		resp, _ := app.Test(req)
 
 		assert.Equal(t, 200, resp.StatusCode)
+		mockService.AssertExpectations(t)
 	})
-
-	mockService.AssertExpectations(t)
 }
 
 func TestUpdatePost(t *testing.T) {
