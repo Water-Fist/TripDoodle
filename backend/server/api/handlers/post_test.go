@@ -46,7 +46,7 @@ func TestAddPost(t *testing.T) {
 	mockService := new(MockPostService)
 	app.Post("/posts", AddPost(mockService))
 
-	t.Run("it should return 400 for invalid request body", func(t *testing.T) {
+	t.Run("유효하지 않은 request body 인 경우, 400 에러 반환", func(t *testing.T) {
 		req := httptest.NewRequest("POST", "/posts", bytes.NewBuffer([]byte("invalid_json")))
 		req.Header.Set("Content-Type", "application/json")
 		resp, _ := app.Test(req)
@@ -54,7 +54,7 @@ func TestAddPost(t *testing.T) {
 		assert.Equal(t, 400, resp.StatusCode)
 	})
 
-	t.Run("it_should_return_400_if_title_or_content_is_missing", func(t *testing.T) {
+	t.Run("제목, 내용, 관광지 PK이 누락된 경우, 400 에러 반환", func(t *testing.T) {
 		body := `{
 			  "title": "",
 			  "content": "test",
@@ -68,7 +68,7 @@ func TestAddPost(t *testing.T) {
 		assert.Equal(t, 400, resp.StatusCode)
 	})
 
-	t.Run("it should return 500 for internal server error", func(t *testing.T) {
+	t.Run("내부 서버 오류의 경우, 500 에러 반환", func(t *testing.T) {
 		body := `{
 			  "title": "test",
 			  "content": "test",
@@ -81,10 +81,9 @@ func TestAddPost(t *testing.T) {
 		resp, _ := app.Test(req)
 
 		assert.Equal(t, 500, resp.StatusCode)
-		mockService.AssertExpectations(t)
 	})
 
-	t.Run("it should return 200 for successful post insertion", func(t *testing.T) {
+	t.Run("성공 시, 200 반환", func(t *testing.T) {
 		body := `{
 			  "title": "test",
 			  "content": "test",
@@ -95,14 +94,17 @@ func TestAddPost(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 		post := entities.Post{
 			ID:       1,
-			Title:    "test title",
-			Content:  "test content",
-			ImageUrl: "test url",
-			State:    true,
+			Title:    "test",
+			Content:  "test",
+			ImageUrl: "test",
+			State:    false,
+			SightId:  1,
 		}
 		mockService.On("InsertPost", mock.Anything).Return(&post, nil).Once()
 		resp, _ := app.Test(req)
 
 		assert.Equal(t, 200, resp.StatusCode)
 	})
+
+	mockService.AssertExpectations(t)
 }
