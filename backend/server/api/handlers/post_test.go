@@ -26,18 +26,24 @@ func (m *MockPostService) InsertPost(req *request.PostRequest) (*entities.Post, 
 }
 
 func (m *MockPostService) FetchPosts() (*[]response.Post, error) {
-	//TODO implement me
-	panic("implement me")
+	args := m.Called()
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*[]response.Post), args.Error(1)
 }
 
 func (m *MockPostService) UpdatePost(post *request.UpdatePostRequest) (*entities.Post, error) {
-	//TODO implement me
-	panic("implement me")
+	args := m.Called(post)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*entities.Post), args.Error(1)
 }
 
 func (m *MockPostService) RemovePost(ID string) error {
-	//TODO implement me
-	panic("implement me")
+	args := m.Called(ID)
+	return args.Error(0)
 }
 
 func TestAddPost(t *testing.T) {
@@ -107,4 +113,105 @@ func TestAddPost(t *testing.T) {
 	})
 
 	mockService.AssertExpectations(t)
+}
+
+func TestUpdatePost(t *testing.T) {
+	app := fiber.New()
+	mockService := new(MockPostService)
+	app.Put("/posts", UpdatePost(mockService))
+
+	t.Run("유효하지 않은 request body 인 경우, 400 에러 반환", func(t *testing.T) {
+		req := httptest.NewRequest("PUT", "/posts", bytes.NewBuffer([]byte("invalid_json")))
+		resp, _ := app.Test(req)
+		assert.Equal(t, 400, resp.StatusCode)
+	})
+
+	t.Run("내부 서버 오류의 경우, 500 에러 반환", func(t *testing.T) {
+		body := `{"title": "test", "content": "updated content"}`
+		req := httptest.NewRequest("PUT", "/posts", bytes.NewBuffer([]byte(body)))
+		req.Header.Set("Content-Type", "application/json")
+		mockService.On("UpdatePost", mock.Anything).Return(nil, errors.New("500 error")).Once()
+		resp, _ := app.Test(req)
+		assert.Equal(t, 500, resp.StatusCode)
+		mockService.AssertExpectations(t)
+	})
+
+	t.Run("성공 시, 200 반환", func(t *testing.T) {
+		body := `{"title": "test", "content": "updated content"}`
+		req := httptest.NewRequest("PUT", "/posts", bytes.NewBuffer([]byte(body)))
+		req.Header.Set("Content-Type", "application/json")
+		updatedPost := entities.Post{
+			Title:   "test",
+			Content: "updated content",
+		}
+		mockService.On("UpdatePost", mock.Anything).Return(&updatedPost, nil).Once()
+		resp, _ := app.Test(req)
+		assert.Equal(t, 200, resp.StatusCode)
+		mockService.AssertExpectations(t)
+	})
+}
+
+func TestRemovePost(t *testing.T) {
+	app := fiber.New()
+	mockService := new(MockPostService)
+	app.Delete("/posts", RemovePost(mockService))
+
+	t.Run("유효하지 않은 request body 인 경우, 400 에러 반환", func(t *testing.T) {
+		req := httptest.NewRequest("DELETE", "/posts", bytes.NewBuffer([]byte("invalid_json")))
+		resp, _ := app.Test(req)
+		assert.Equal(t, 400, resp.StatusCode)
+	})
+
+	t.Run("내부 서버 오류의 경우, 500 에러 반환", func(t *testing.T) {
+		body := `{"ID": "12345"}`
+		req := httptest.NewRequest("DELETE", "/posts", bytes.NewBuffer([]byte(body)))
+		req.Header.Set("Content-Type", "application/json")
+		mockService.On("RemovePost", "12345").Return(errors.New("500 error")).Once()
+		resp, _ := app.Test(req)
+		assert.Equal(t, 500, resp.StatusCode)
+		mockService.AssertExpectations(t)
+	})
+
+	t.Run("성공 시, 200 반환", func(t *testing.T) {
+		body := `{"ID": "12345"}`
+		req := httptest.NewRequest("DELETE", "/posts", bytes.NewBuffer([]byte(body)))
+		req.Header.Set("Content-Type", "application/json")
+		mockService.On("RemovePost", "12345").Return(nil).Once()
+		resp, _ := app.Test(req)
+		assert.Equal(t, 200, resp.StatusCode)
+		mockService.AssertExpectations(t)
+	})
+}
+
+// TestGetPosts
+func TestGetPosts(t *testing.T) {
+	app := fiber.New()
+	mockService := new(MockPostService)
+	app.Get("/posts", GetPosts(mockService))
+
+	t.Run("내부 서버 오류의 경우, 500 에러 반환", func(t *testing.T) {
+		req := httptest.NewRequest("GET", "/posts", nil)
+		mockService.On("FetchPosts").Return(nil, errors.New("500 error")).Once()
+		resp, _ := app.Test(req)
+		assert.Equal(t, 500, resp.StatusCode)
+		mockService.AssertExpectations(t)
+	})
+
+	t.Run("성공 시, 200 반환", func(t *testing.T) {
+		req := httptest.NewRequest("GET", "/posts", nil)
+		posts := []response.Post{
+			{
+				Title:   "test1",
+				Content: "content1",
+			},
+			{
+				Title:   "test2",
+				Content: "content2",
+			},
+		}
+		mockService.On("FetchPosts").Return(&posts, nil).Once()
+		resp, _ := app.Test(req)
+		assert.Equal(t, 200, resp.StatusCode)
+		mockService.AssertExpectations(t)
+	})
 }
