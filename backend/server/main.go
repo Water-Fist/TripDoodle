@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/swagger"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"log"
 	"os"
 	"server/api/routes"
@@ -45,7 +45,7 @@ func main() {
 
 	app.Use(cors.New())
 
-	app.Get("/swagger/*", fiberSwagger.WrapHandler)
+	app.Get("/swagger/*", swagger.HandlerDefault)
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 	routes.PostRouter(v1, postService)
