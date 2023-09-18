@@ -8,12 +8,13 @@ import (
 
 type Repository interface {
 	CreateUser(user *entities.User) (*entities.User, error)
-	ReadUser(user *entities.User) (*entities.User, error)
+	GetUsers() (*[]entities.User, error)
 	GetUserByID(ID string) (*entities.User, error)
-	EmailCheck(user *entities.User) (bool, error)
-	NicknameCheck(user *entities.User) (bool, error)
+	EmailCheck(email string) (bool, error)
+	NicknameCheck(email string) (bool, error)
 	UpdateUser(user *entities.User) (*entities.User, error)
-	DeleteUser(ID string) (*entities.User, error)
+	DeleteUser(ID string) error
+	UserCheck(email string, password string) (bool, error)
 }
 
 type NewRepository struct {
@@ -50,7 +51,7 @@ func (r *NewRepository) CreateUser(user *entities.User) (*entities.User, error) 
 	return user, nil
 }
 
-func (r *NewRepository) ReadUser(user *entities.User) (*entities.User, error) {
+func (r *NewRepository) GetUsers() (*[]entities.User, error) {
 	query :=
 		`
 		SELECT
@@ -58,20 +59,34 @@ func (r *NewRepository) ReadUser(user *entities.User) (*entities.User, error) {
 			email,
 			password,
 			nickname,
-			is_deleted,
-			created_at,
-			updated_at
+			is_deleted
 		FROM
 			user
 		WHERE
-			email = $1
+			is_deleted = $1
 		`
 
-	err := r.Db.QueryRow(query, user.Email).Scan(&user.ID, &user.Email, &user.Password, &user.Nickname, &user.IsDeleted, &user.CreatedAt, &user.UpdatedAt)
+	rows, err := r.Db.Query(query, false)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+
+	var users []entities.User
+
+	for rows.Next() {
+		var user entities.User
+		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Nickname)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &users, nil
 }
 
 func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
@@ -96,7 +111,7 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 	return user, nil
 }
 
-func (r *NewRepository) NicknameCheck(user *entities.User) (bool, error) {
+func (r *NewRepository) NicknameCheck(nickname string) (bool, error) {
 	query :=
 		`
 		SELECT
@@ -111,7 +126,7 @@ func (r *NewRepository) NicknameCheck(user *entities.User) (bool, error) {
 		`
 
 	var exists bool
-	err := r.Db.QueryRow(query, user.Nickname).Scan(&exists)
+	err := r.Db.QueryRow(query, nickname).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
@@ -119,7 +134,7 @@ func (r *NewRepository) NicknameCheck(user *entities.User) (bool, error) {
 	return exists, nil
 }
 
-func (r *NewRepository) EmailCheck(user *entities.User) (bool, error) {
+func (r *NewRepository) EmailCheck(email string) (bool, error) {
 	query :=
 		`
 		SELECT
@@ -134,7 +149,7 @@ func (r *NewRepository) EmailCheck(user *entities.User) (bool, error) {
 		`
 
 	var exists bool
-	err := r.Db.QueryRow(query, user.Email).Scan(&exists)
+	err := r.Db.QueryRow(query, email).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
@@ -181,4 +196,28 @@ func (r *NewRepository) DeleteUser(ID string) error {
 	}
 
 	return nil
+}
+
+// TODO: 패스워드 암호화 필요
+func (r *NewRepository) UserCheck(email string, password string) (bool, error) {
+	query :=
+		`
+		SELECT
+			EXISTS(
+				SELECT
+					1
+				FROM
+					user
+				WHERE
+					email = $1 AND password = $2
+		) AS exist
+		`
+
+	var exists bool
+	err := r.Db.QueryRow(query, email, password).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
 }
