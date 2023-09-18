@@ -89,10 +89,10 @@ func GetUsers(service user.Service) fiber.Handler {
 	}
 }
 
-func EmailCheck(service user.Service) fiber.Handler {
+func CheckEmail(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		email := c.Params("email")
-		result, err := service.EmailCheck(email)
+		result, err := service.CheckEmail(email)
 		if err != nil {
 			c.Status(fiber.StatusInternalServerError)
 			return c.JSON(response.CheckErrorResponse(err))
@@ -101,10 +101,10 @@ func EmailCheck(service user.Service) fiber.Handler {
 	}
 }
 
-func NicknameCheck(service user.Service) fiber.Handler {
+func CheckNickname(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		nickname := c.Params("nickname")
-		result, err := service.NicknameCheck(nickname)
+		result, err := service.CheckNickname(nickname)
 		if err != nil {
 			c.Status(fiber.StatusInternalServerError)
 			return c.JSON(response.CheckErrorResponse(err))

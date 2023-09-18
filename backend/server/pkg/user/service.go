@@ -6,8 +6,8 @@ type Service interface {
 	InsertUser(user *entities.User) (*entities.User, error)
 	UpdateUser(user *entities.User) (*entities.User, error)
 	RemoveUser(ID string) error
-	EmailCheck(email string) (bool, error)
-	NicknameCheck(nickname string) (bool, error)
+	CheckEmail(email string) (bool, error)
+	CheckNickname(nickname string) (bool, error)
 	GetUserById(ID string) (*entities.User, error)
 	GetUsers() (*[]entities.User, error)
 	Login(email string, password string) (bool, error)
@@ -35,12 +35,12 @@ func (s *service) RemoveUser(ID string) error {
 	return s.repository.DeleteUser(ID)
 }
 
-func (s *service) EmailCheck(email string) (bool, error) {
-	return s.repository.EmailCheck(email)
+func (s *service) CheckEmail(email string) (bool, error) {
+	return s.repository.CheckEmail(email)
 }
 
-func (s *service) NicknameCheck(nickname string) (bool, error) {
-	return s.repository.NicknameCheck(nickname)
+func (s *service) CheckNickname(nickname string) (bool, error) {
+	return s.repository.CheckNickname(nickname)
 }
 
 func (s *service) GetUserById(ID string) (*entities.User, error) {
@@ -53,5 +53,5 @@ func (s *service) GetUsers() (*[]entities.User, error) {
 
 // TODO: JWT 추가
 func (s *service) Login(email string, password string) (bool, error) {
-	return s.repository.UserCheck(email, password)
+	return s.repository.CheckUser(email, password)
 }
