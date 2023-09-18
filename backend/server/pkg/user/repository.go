@@ -10,11 +10,11 @@ type Repository interface {
 	CreateUser(user *entities.User) (*entities.User, error)
 	GetUsers() (*[]entities.User, error)
 	GetUserByID(ID string) (*entities.User, error)
-	EmailCheck(email string) (bool, error)
-	NicknameCheck(email string) (bool, error)
+	CheckEmail(email string) (bool, error)
+	CheckNickname(email string) (bool, error)
 	UpdateUser(user *entities.User) (*entities.User, error)
 	DeleteUser(ID string) error
-	UserCheck(email string, password string) (bool, error)
+	CheckUser(email string, password string) (bool, error)
 }
 
 type NewRepository struct {
@@ -30,21 +30,21 @@ func NewRepo(Db *sql.DB) *NewRepository {
 func (r *NewRepository) CreateUser(user *entities.User) (*entities.User, error) {
 	query :=
 		`
-		INSERT INTO user 
-			(email, 
+		INSERT INTO "user" 
+			(name,
+			 email, 
 			 password, 
 			 nickname, 
-			 is_deleted, 
-			 created_at, 
-			 updated_at) 
+			 is_deleted
+			) 
 		VALUES 
-		($1, $2, $3, $4, $5, $6) 
+		($1, $2, $3, $4, $5) 
 		RETURNING id
 		`
 
 	user.IsDeleted = false
 
-	err := r.Db.QueryRow(query, user.Email, user.Password, user.Nickname, user.IsDeleted).Scan(&user.ID)
+	err := r.Db.QueryRow(query, user.Name, user.Email, user.Password, user.Nickname, user.IsDeleted).Scan(&user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,9 +59,9 @@ func (r *NewRepository) GetUsers() (*[]entities.User, error) {
 			email,
 			password,
 			nickname,
-			is_deleted
+			name,
 		FROM
-			user
+			"user"
 		WHERE
 			is_deleted = $1
 		`
@@ -75,7 +75,7 @@ func (r *NewRepository) GetUsers() (*[]entities.User, error) {
 
 	for rows.Next() {
 		var user entities.User
-		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Nickname)
+		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Name, &user.Nickname)
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +97,7 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 			email,
 			nickname
 		FROM
-			user
+			"user"
 		WHERE
 			id = $1
 		`
@@ -111,7 +111,7 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 	return user, nil
 }
 
-func (r *NewRepository) NicknameCheck(nickname string) (bool, error) {
+func (r *NewRepository) CheckNickname(nickname string) (bool, error) {
 	query :=
 		`
 		SELECT
@@ -119,7 +119,7 @@ func (r *NewRepository) NicknameCheck(nickname string) (bool, error) {
 				SELECT
 					1
 				FROM
-					user
+					"user"
 				WHERE
 					nickname = $1
 		) AS exist
@@ -134,7 +134,7 @@ func (r *NewRepository) NicknameCheck(nickname string) (bool, error) {
 	return exists, nil
 }
 
-func (r *NewRepository) EmailCheck(email string) (bool, error) {
+func (r *NewRepository) CheckEmail(email string) (bool, error) {
 	query :=
 		`
 		SELECT
@@ -142,7 +142,7 @@ func (r *NewRepository) EmailCheck(email string) (bool, error) {
 				SELECT
 					1
 				FROM
-					user
+					"user"
 				WHERE
 					email = $1
 		) AS exist
@@ -161,7 +161,7 @@ func (r *NewRepository) UpdateUser(user *entities.User) (*entities.User, error) 
 	query :=
 		`
 		UPDATE
-			user
+			"user"
 		SET
 			email = $1,
 			password = $2,
@@ -182,7 +182,7 @@ func (r *NewRepository) DeleteUser(ID string) error {
 	query :=
 		`
 		UPDATE
-			user
+			"user"
 		SET
 			is_deleted = $1
 			deleted_at = $2
@@ -199,7 +199,7 @@ func (r *NewRepository) DeleteUser(ID string) error {
 }
 
 // TODO: 패스워드 암호화 필요
-func (r *NewRepository) UserCheck(email string, password string) (bool, error) {
+func (r *NewRepository) CheckUser(email string, password string) (bool, error) {
 	query :=
 		`
 		SELECT
@@ -207,7 +207,7 @@ func (r *NewRepository) UserCheck(email string, password string) (bool, error) {
 				SELECT
 					1
 				FROM
-					user
+					"user"
 				WHERE
 					email = $1 AND password = $2
 		) AS exist
