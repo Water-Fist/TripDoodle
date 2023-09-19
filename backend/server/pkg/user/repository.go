@@ -101,11 +101,11 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 		FROM
 			"user"
 		WHERE
-			id = $1
+			id = $1 and is_deleted = $2
 		`
 
 	user := &entities.User{}
-	err := r.Db.QueryRow(query, ID).Scan(&user.ID, &user.Email, &user.Nickname, &user.Password, &user.Name)
+	err := r.Db.QueryRow(query, ID, false).Scan(&user.ID, &user.Email, &user.Nickname, &user.Password, &user.Name)
 
 	if err != nil {
 		return nil, err
@@ -123,12 +123,12 @@ func (r *NewRepository) CheckNickname(nickname string) (bool, error) {
 				FROM
 					"user"
 				WHERE
-					nickname = $1
+					nickname = $1 and is_deleted = $2
 		) AS exist
 		`
 
 	var exists bool
-	err := r.Db.QueryRow(query, nickname).Scan(&exists)
+	err := r.Db.QueryRow(query, nickname, false).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
@@ -146,12 +146,12 @@ func (r *NewRepository) CheckEmail(email string) (bool, error) {
 				FROM
 					"user"
 				WHERE
-					email = $1
+					email = $1 and is_deleted = $2
 		) AS exist
 		`
 
 	var exists bool
-	err := r.Db.QueryRow(query, email).Scan(&exists)
+	err := r.Db.QueryRow(query, email, false).Scan(&exists)
 	if err != nil {
 		return false, err
 	}

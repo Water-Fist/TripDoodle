@@ -10,6 +10,18 @@ definitions:
       id:
         type: string
     type: object
+  request.DeleteUserRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  request.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
   request.PostRequest:
     properties:
       content:
@@ -83,6 +95,46 @@ definitions:
         type: string
       type:
         type: string
+    type: object
+  request.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+    type: object
+  request.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+    type: object
+  response.CheckErrorResponseType:
+    properties:
+      data:
+        type: boolean
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.CheckResponseType:
+    properties:
+      data:
+        type: boolean
+      error: {}
+      state:
+        type: boolean
     type: object
   response.Post:
     properties:
@@ -173,6 +225,45 @@ definitions:
       data:
         items:
           $ref: '#/definitions/response.Sight'
+        type: array
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+    type: object
+  response.UserErrorResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/response.User'
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.UserSuccessResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/response.User'
+      error: {}
+      state:
+        type: boolean
+    type: object
+  response.UsersSuccessResponseType:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/response.User'
         type: array
       error: {}
       state:
@@ -426,4 +517,207 @@ paths:
       summary: Get Current sights
       tags:
       - sights
+  /users:
+    delete:
+      consumes:
+      - application/json
+      description: Remove user from the database
+      parameters:
+      - description: Delete user
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/request.DeleteUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted the user
+          schema:
+            $ref: '#/definitions/response.UserSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UsersSuccessResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Add a new user to the database
+      parameters:
+      - description: Add user
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added the user
+          schema:
+            $ref: '#/definitions/response.UserSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update user details in the database
+      parameters:
+      - description: Update user
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated the user
+          schema:
+            $ref: '#/definitions/response.UserSuccessResponseType'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a user from the database based on its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UserSuccessResponseType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.UserErrorResponseType'
+      tags:
+      - users
+  /users/check/email/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Check if email exists in the database
+      parameters:
+      - description: User email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CheckResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.CheckErrorResponseType'
+      tags:
+      - users
+  /users/check/nickname/{nickname}:
+    get:
+      consumes:
+      - application/json
+      description: Check if nickname exists in the database
+      parameters:
+      - description: User nickname
+        in: path
+        name: nickname
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CheckResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.CheckErrorResponseType'
+      tags:
+      - users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email and password
+      parameters:
+      - description: Login
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CheckResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.CheckErrorResponseType'
+      tags:
+      - users
 swagger: "2.0"
