@@ -59,7 +59,7 @@ func (r *NewRepository) GetUsers() (*[]entities.User, error) {
 			email,
 			password,
 			nickname,
-			name,
+			name
 		FROM
 			"user"
 		WHERE
@@ -95,7 +95,9 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 		SELECT
 			id,
 			email,
-			nickname
+			nickname,
+			password,
+			name
 		FROM
 			"user"
 		WHERE
@@ -103,7 +105,7 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 		`
 
 	user := &entities.User{}
-	err := r.Db.QueryRow(query, ID).Scan(&user.ID, &user.Email, &user.Nickname)
+	err := r.Db.QueryRow(query, ID).Scan(&user.ID, &user.Email, &user.Nickname, &user.Password, &user.Name)
 
 	if err != nil {
 		return nil, err
@@ -165,12 +167,12 @@ func (r *NewRepository) UpdateUser(user *entities.User) (*entities.User, error) 
 		SET
 			email = $1,
 			password = $2,
-			nickname = $3,
+			nickname = $3
 		WHERE
 			id = $4
 		`
 
-	_, err := r.Db.Exec(query, user.Email, user.Password, user.Nickname, user.Email)
+	_, err := r.Db.Exec(query, user.Email, user.Password, user.Nickname, user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +186,7 @@ func (r *NewRepository) DeleteUser(ID string) error {
 		UPDATE
 			"user"
 		SET
-			is_deleted = $1
+			is_deleted = $1,
 			deleted_at = $2
 		WHERE
 			id = $3
