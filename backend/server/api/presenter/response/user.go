@@ -48,12 +48,6 @@ type UsersSuccessResponseType struct {
 	Error interface{} `json:"error"`
 }
 
-type UsersErrorResponseType struct {
-	State bool        `json:"state"`
-	Data  []User      `json:"data"`
-	Error interface{} `json:"error"`
-}
-
 func UserErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"state": false,
