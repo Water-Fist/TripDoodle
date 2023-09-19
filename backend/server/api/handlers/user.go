@@ -62,7 +62,11 @@ func RemoveUser(service user.Service) fiber.Handler {
 			c.Status(fiber.StatusInternalServerError)
 			return c.JSON(response.UserErrorResponse(err))
 		}
-		return c.JSON(response.UserSuccessResponse(nil))
+		return c.JSON(&fiber.Map{
+			"status": true,
+			"data":   "deleted successfully",
+			"err":    nil,
+		})
 	}
 }
 
