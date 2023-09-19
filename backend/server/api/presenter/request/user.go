@@ -8,7 +8,7 @@ type UserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	ID       string `json:"id"`
+	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -16,7 +16,7 @@ type UpdateUserRequest struct {
 }
 
 type DeleteUserRequest struct {
-	ID string `json:"id"`
+	ID int `json:"id"`
 }
 
 type LoginRequest struct {

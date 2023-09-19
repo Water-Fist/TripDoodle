@@ -42,6 +42,12 @@ func UsersSuccessResponse(data *[]entities.User) *fiber.Map {
 	}
 }
 
+type UsersSuccessResponseType struct {
+	State bool        `json:"state"`
+	Data  []User      `json:"data"`
+	Error interface{} `json:"error"`
+}
+
 type UsersErrorResponseType struct {
 	State bool        `json:"state"`
 	Data  []User      `json:"data"`
@@ -70,10 +76,22 @@ func CheckResponse(data bool) *fiber.Map {
 	}
 }
 
+type CheckResponseType struct {
+	State bool        `json:"state"`
+	Data  bool        `json:"data"`
+	Error interface{} `json:"error"`
+}
+
 func CheckErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"state": true,
 		"data":  nil,
 		"error": err.Error(),
 	}
+}
+
+type CheckErrorResponseType struct {
+	State bool        `json:"state"`
+	Data  bool        `json:"data"`
+	Error interface{} `json:"error"`
 }
