@@ -30,7 +30,7 @@ func NewRepo(Db *sql.DB) *NewRepository {
 func (r *NewRepository) CreateUser(user *entities.User) (*entities.User, error) {
 	query :=
 		`
-		INSERT INTO "user" 
+		INSERT INTO users 
 			(name,
 			 email, 
 			 password, 
@@ -61,7 +61,7 @@ func (r *NewRepository) GetUsers() (*[]entities.User, error) {
 			nickname,
 			name
 		FROM
-			"user"
+			users
 		WHERE
 			is_deleted = $1
 		`
@@ -99,7 +99,7 @@ func (r *NewRepository) GetUserByID(ID string) (*entities.User, error) {
 			password,
 			name
 		FROM
-			"user"
+			users
 		WHERE
 			id = $1 and is_deleted = $2
 		`
@@ -121,7 +121,7 @@ func (r *NewRepository) CheckNickname(nickname string) (bool, error) {
 				SELECT
 					1
 				FROM
-					"user"
+					users
 				WHERE
 					nickname = $1 and is_deleted = $2
 		) AS exist
@@ -144,7 +144,7 @@ func (r *NewRepository) CheckEmail(email string) (bool, error) {
 				SELECT
 					1
 				FROM
-					"user"
+					users
 				WHERE
 					email = $1 and is_deleted = $2
 		) AS exist
@@ -163,7 +163,7 @@ func (r *NewRepository) UpdateUser(user *entities.User) (*entities.User, error) 
 	query :=
 		`
 		UPDATE
-			"user"
+			users
 		SET
 			email = $1,
 			password = $2,
@@ -184,7 +184,7 @@ func (r *NewRepository) DeleteUser(ID string) error {
 	query :=
 		`
 		UPDATE
-			"user"
+			users
 		SET
 			is_deleted = $1,
 			deleted_at = $2
@@ -209,7 +209,7 @@ func (r *NewRepository) CheckUser(email string, password string) (bool, error) {
 				SELECT
 					1
 				FROM
-					"user"
+					users
 				WHERE
 					email = $1 AND password = $2
 		) AS exist

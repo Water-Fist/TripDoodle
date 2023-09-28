@@ -28,7 +28,7 @@ func (r *repository) CreatePost(post *entities.Post) (*entities.Post, error) {
 	query :=
 		`
 			INSERT INTO 
-			    post (title, content, image_url, state, sight_id, is_deleted, created_at, updated_at) 
+			    posts (title, content, image_url, state, sight_id, is_deleted, created_at, updated_at) 
 			VALUES 
 			    ($1, $2, $3, $4, $5, $6, $7, $8) 
 			RETURNING id
@@ -56,7 +56,7 @@ func (r *repository) ReadPost() (*[]response.Post, error) {
     			state,
 				sight_id
 			FROM 
-			    post
+			    posts
 			WHERE 
 			    is_deleted = false
 		`
@@ -88,7 +88,7 @@ func (r *repository) UpdatePost(post *entities.Post) (*entities.Post, error) {
 	query :=
 		`
 			UPDATE 
-			    post
+			    posts
 			SET 
 			    title = $1, 
 			    content = $2, 
@@ -116,7 +116,7 @@ func (r *repository) DeletePost(ID string) error {
 	query :=
 		`
 			UPDATE 
-			    post
+			    posts
 			SET 
 			    is_deleted = $1, 
 			    deleted_at = $2 

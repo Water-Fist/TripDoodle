@@ -1,4 +1,4 @@
-CREATE TABLE "user" (
+CREATE TABLE users (
                         id SERIAL PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         nickname VARCHAR(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "user" (
                         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE sight (
+CREATE TABLE sights (
                        id SERIAL PRIMARY KEY,
                        name VARCHAR(255) NOT NULL,
                        type VARCHAR(255) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE sight (
                        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE post (
+CREATE TABLE posts (
                       id SERIAL PRIMARY KEY,
                       title VARCHAR(255) NOT NULL,
                       content TEXT NOT NULL,
@@ -40,11 +40,11 @@ CREATE TABLE post (
                       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                       sight_id INT,
                       user_id INT,
-                      FOREIGN KEY (sight_id) REFERENCES sight(id),
-                      FOREIGN KEY (user_id) REFERENCES "user"(id)
+                      FOREIGN KEY (sight_id) REFERENCES sights(id),
+                      FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE comment (
+CREATE TABLE comments (
                          id SERIAL PRIMARY KEY,
                          content TEXT NOT NULL,
                          is_deleted BOOLEAN NOT NULL,
@@ -54,9 +54,9 @@ CREATE TABLE comment (
                          post_id INT,
                          user_id INT,
                          parent_comment_id INT,
-                         FOREIGN KEY (post_id) REFERENCES post(id),
-                         FOREIGN KEY (parent_comment_id) REFERENCES comment(id),
-                         FOREIGN KEY (user_id) REFERENCES "user"(id)
+                         FOREIGN KEY (post_id) REFERENCES posts(id),
+                         FOREIGN KEY (parent_comment_id) REFERENCES comments(id),
+                         FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -68,21 +68,21 @@ END;
 $$ language 'plpgsql';
 
 CREATE TRIGGER update_user_updated_at
-    BEFORE UPDATE ON "user"
+    BEFORE UPDATE ON users
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_sight_updated_at
-    BEFORE UPDATE ON sight
+    BEFORE UPDATE ON sights
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_post_updated_at
-    BEFORE UPDATE ON post
+    BEFORE UPDATE ON posts
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_comment_updated_at
-    BEFORE UPDATE ON comment
+    BEFORE UPDATE ON comments
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
