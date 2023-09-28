@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	handler "server/api/handlers"
+	handler "server/api/handlers/post"
 	"server/pkg/post"
 )
 
