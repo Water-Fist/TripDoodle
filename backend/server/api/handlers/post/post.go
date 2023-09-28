@@ -1,4 +1,4 @@
-package handler
+package post
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"server/pkg/post"
 )
 
-// @Summary Add a new post
+// AddPost @Summary Add a new post
 // @Description Add a new post to the database
 // @Tags posts
 // @Accept json
@@ -44,7 +44,7 @@ func AddPost(service post.Service) fiber.Handler {
 	}
 }
 
-// @Summary Update an existing post
+// UpdatePost @Summary Update an existing post
 // @Description Update post details in the database
 // @Tags posts
 // @Accept json
@@ -71,7 +71,7 @@ func UpdatePost(service post.Service) fiber.Handler {
 	}
 }
 
-// @Summary Remove a post
+// RemovePost @Summary Remove a post
 // @Description Remove a post from the database based on its ID
 // @Tags posts
 // @Accept json
@@ -103,7 +103,7 @@ func RemovePost(service post.Service) fiber.Handler {
 	}
 }
 
-// @Summary Get all posts
+// GetPosts @Summary Get all posts
 // @Description Get all posts from the database
 // @Tags posts
 // @Produce json
