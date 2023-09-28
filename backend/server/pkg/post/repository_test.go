@@ -77,12 +77,19 @@ func TestUpdatePost(t *testing.T) {
 		State:    true,
 	}
 
-	// Use sqlmock.AnyArg() for the updated_at argument
-	mock.ExpectExec("UPDATE").WithArgs(updatePost.Title, updatePost.Content, updatePost.ImageUrl, updatePost.State, false, sqlmock.AnyArg(), updatePost.ID).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("UPDATE").WithArgs(
+		updatePost.Title,
+		updatePost.Content,
+		updatePost.ImageUrl,
+		updatePost.State,
+		false,
+		sqlmock.AnyArg(),
+		updatePost.ID,
+	).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	result, err := repo.UpdatePost(updatePost)
 	assert.Nil(t, err)
-	if result != nil { // Check if result is not nil before referencing its fields
+	if result != nil {
 		assert.Equal(t, result.ID, 1)
 	}
 }
@@ -96,7 +103,11 @@ func TestDeletePost(t *testing.T) {
 
 	repo := NewRepo(db)
 
-	mock.ExpectExec("UPDATE").WithArgs(1).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("UPDATE").WithArgs(
+		true,
+		sqlmock.AnyArg(),
+		"1",
+	).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	err = repo.DeletePost("1")
 	assert.Nil(t, err)
