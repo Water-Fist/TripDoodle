@@ -96,7 +96,7 @@ func (r *repository) UpdateSight(sight *entities.Sight) (*entities.Sight, error)
 	query :=
 		`
 			UPDATE 
-			    sights 
+			    sights
 			SET 
 				name = $1, 
 				type = $2, 
@@ -137,13 +137,13 @@ func (r *repository) UpdateSight(sight *entities.Sight) (*entities.Sight, error)
 }
 
 func (r *repository) DeleteSight(ID string) error {
-	//query := `DELETE FROM sights WHERE id = $1`
+	//query := `DELETE FROM sight WHERE id = $1`
 
 	// 실제 데이터 삭제가 아닌 is_deleted를 true로 변경
 	query :=
 		`
 			UPDATE 
-			    sights 
+			    sights
 			SET 
 			    is_deleted = $1, 
 			    deleted_at = $2 

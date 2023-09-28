@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/swagger"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"log"
 	"os"
 	"server/api/routes"
 	_ "server/docs"
 	"server/pkg/post"
 	"server/pkg/sight"
+	"server/pkg/user"
 	"time"
 )
 
@@ -40,16 +41,19 @@ func main() {
 	postService := post.NewService(postRepo)
 	sightRepo := sight.NewRepo(db)
 	sightService := sight.NewService(sightRepo)
+	userRepo := user.NewRepo(db)
+	userService := user.NewService(userRepo)
 
 	app := fiber.New()
 
 	app.Use(cors.New())
 
-	app.Get("/swagger/*", fiberSwagger.WrapHandler)
+	app.Get("/swagger/*", swagger.HandlerDefault)
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 	routes.PostRouter(v1, postService)
 	routes.SightRouter(v1, sightService)
+	routes.UserRouter(v1, userService)
 
 	log.Fatal(app.Listen(":8080"))
 }
@@ -64,7 +68,7 @@ func init() {
 	// Assign environment variables
 	host = os.Getenv("DB_HOST")
 	port = os.Getenv("DB_PORT")
-	user = os.Getenv("DB_USER")
+	dbUser = os.Getenv("DB_USER")
 	password = os.Getenv("DB_PASSWORD")
 	dbname = os.Getenv("DB_NAME")
 }
@@ -73,13 +77,13 @@ func init() {
 var (
 	host     string
 	port     string
-	user     string
+	dbUser   string
 	password string
 	dbname   string
 )
 
 func databaseConnection() (*sql.DB, error) {
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai", host, port, user, password, dbname)
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai", host, port, dbUser, password, dbname)
 
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
