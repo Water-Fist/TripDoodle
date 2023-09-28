@@ -56,7 +56,7 @@ func (r *repository) ReadPost() (*[]response.Post, error) {
     			state,
 				sight_id
 			FROM 
-			    posts 
+			    posts
 			WHERE 
 			    is_deleted = false
 		`
@@ -88,7 +88,7 @@ func (r *repository) UpdatePost(post *entities.Post) (*entities.Post, error) {
 	query :=
 		`
 			UPDATE 
-			    posts 
+			    posts
 			SET 
 			    title = $1, 
 			    content = $2, 
@@ -116,7 +116,7 @@ func (r *repository) DeletePost(ID string) error {
 	query :=
 		`
 			UPDATE 
-			    posts 
+			    posts
 			SET 
 			    is_deleted = $1, 
 			    deleted_at = $2 
