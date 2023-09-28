@@ -28,7 +28,7 @@ func NewRepo(Db *sql.DB) Repository {
 func (r *repository) CreateSight(sight *entities.Sight) (*entities.Sight, error) {
 	query :=
 		`
-		INSERT INTO sight 
+		INSERT INTO sights 
 		(name, type, province, city_county_district, legal_dong, ri, street_number, building_number, latitude, longitude, is_deleted, created_at, updated_at) 
 		VALUES 
 		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) 
@@ -62,7 +62,7 @@ func (r *repository) ReadSight() (*[]response.Sight, error) {
 				street_number, 
 				building_number
 			FROM
-			    sight
+			    sights
 			WHERE 
 			    is_deleted = false
 		`
@@ -96,7 +96,7 @@ func (r *repository) UpdateSight(sight *entities.Sight) (*entities.Sight, error)
 	query :=
 		`
 			UPDATE 
-			    sight
+			    sights
 			SET 
 				name = $1, 
 				type = $2, 
@@ -143,7 +143,7 @@ func (r *repository) DeleteSight(ID string) error {
 	query :=
 		`
 			UPDATE 
-			    sight
+			    sights
 			SET 
 			    is_deleted = $1, 
 			    deleted_at = $2 
@@ -166,7 +166,7 @@ func (r *repository) LoadSight(Latitude float32, Longitude float32) (*[]response
 			id,
 			name
 		FROM
-			sight
+			sights
 		WHERE
 			ST_DWithin(
 				geography(ST_SetSRID(ST_Point(longitude, latitude), 4326)),
