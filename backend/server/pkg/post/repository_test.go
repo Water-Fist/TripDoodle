@@ -24,7 +24,16 @@ func TestCreatePost(t *testing.T) {
 		SightId:  1,
 	}
 
-	mock.ExpectQuery("INSERT INTO").WithArgs(newPost.Title, newPost.Content, newPost.ImageUrl, newPost.State, newPost.SightId, false, sqlmock.AnyArg(), sqlmock.AnyArg()).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+	mock.ExpectQuery("INSERT INTO").WithArgs(
+		newPost.Title,
+		newPost.Content,
+		newPost.ImageUrl,
+		newPost.State,
+		newPost.SightId,
+		false,
+		sqlmock.AnyArg(),
+		sqlmock.AnyArg(),
+	).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 	result, err := repo.CreatePost(newPost)
 	assert.Nil(t, err)
