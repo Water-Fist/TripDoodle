@@ -23,7 +23,7 @@ import (
 // @Router /sights [post]
 func AddSight(service sight.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var requestBody entities.Sight
+		var requestBody request.SightRequest
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			c.Status(http.StatusBadRequest)
