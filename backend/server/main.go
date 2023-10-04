@@ -23,7 +23,7 @@ import (
 // @version 1.0
 // @description TripDoodle Server API Docs
 
-// @host localhost:8080
+// @host localhost:8000
 // @BasePath /api/v1
 func main() {
 	// Connect with database
@@ -55,7 +55,7 @@ func main() {
 	routes.SightRouter(v1, sightService)
 	routes.UserRouter(v1, userService)
 
-	log.Fatal(app.Listen(":8080"))
+	log.Fatal(app.Listen(":8000"))
 }
 
 func init() {

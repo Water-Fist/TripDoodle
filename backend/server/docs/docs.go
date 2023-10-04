@@ -24,7 +24,6 @@ const docTemplate = `{
                 "tags": [
                     "posts"
                 ],
-                "summary": "Get all posts",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -51,7 +50,6 @@ const docTemplate = `{
                 "tags": [
                     "posts"
                 ],
-                "summary": "Update an existing post",
                 "parameters": [
                     {
                         "description": "Update post",
@@ -95,7 +93,6 @@ const docTemplate = `{
                 "tags": [
                     "posts"
                 ],
-                "summary": "Add a new post",
                 "parameters": [
                     {
                         "description": "Add post",
@@ -139,7 +136,6 @@ const docTemplate = `{
                 "tags": [
                     "posts"
                 ],
-                "summary": "Remove a post",
                 "parameters": [
                     {
                         "description": "Update post",
@@ -1110,7 +1106,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "localhost:8000",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "TripDoodle API",

@@ -269,7 +269,7 @@ definitions:
       state:
         type: boolean
     type: object
-host: localhost:8080
+host: localhost:8000
 info:
   contact: {}
   description: TripDoodle Server API Docs
@@ -303,7 +303,6 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/response.PostErrorResponseType'
-      summary: Remove a post
       tags:
       - posts
     get:
@@ -319,7 +318,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.PostErrorResponseType'
-      summary: Get all posts
       tags:
       - posts
     post:
@@ -348,7 +346,6 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/response.PostErrorResponseType'
-      summary: Add a new post
       tags:
       - posts
     put:
@@ -377,7 +374,6 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/response.PostErrorResponseType'
-      summary: Update an existing post
       tags:
       - posts
   /sights:

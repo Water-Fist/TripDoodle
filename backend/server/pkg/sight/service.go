@@ -1,12 +1,13 @@
 package sight
 
 import (
+	"server/api/presenter/request"
 	"server/api/presenter/response"
 	"server/pkg/entities"
 )
 
 type Service interface {
-	InsertSight(sight *entities.Sight) (*entities.Sight, error)
+	InsertSight(sight *request.SightRequest) (*entities.Sight, error)
 	FetchSights() (*[]response.Sight, error)
 	UpdateSight(sight *entities.Sight) (*entities.Sight, error)
 	RemoveSight(ID string) error
@@ -23,8 +24,20 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) InsertSight(sight *entities.Sight) (*entities.Sight, error) {
-	return s.repository.CreateSight(sight)
+func (s *service) InsertSight(sight *request.SightRequest) (*entities.Sight, error) {
+	body := &entities.Sight{
+		Name:               sight.Name,
+		Type:               sight.Type,
+		Province:           sight.Province,
+		CityCountyDistrict: sight.CityCountyDistrict,
+		LegalDong:          sight.LegalDong,
+		Ri:                 sight.Ri,
+		StreetNumber:       sight.StreetNumber,
+		BuildingNumber:     sight.BuildingNumber,
+		Latitude:           sight.Latitude,
+		Longitude:          sight.Longitude,
+	}
+	return s.repository.CreateSight(body)
 }
 
 func (s *service) FetchSights() (*[]response.Sight, error) {
